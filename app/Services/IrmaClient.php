@@ -17,6 +17,8 @@ use GuzzleHttp\ClientInterface;
 use Irma\DataTypes\Callsign;
 use Irma\DataTypes\Reservation;
 use Irma\DataTypes\ReservationCollection;
+use Irma\Services\Irma\DataTypes\Member;
+use Irma\Services\Irma\DataTypes\MemberCollection;
 use Symfony\Component\DomCrawler\Crawler;
 
 class IrmaClient
@@ -172,7 +174,58 @@ class IrmaClient
             });
 
         return ReservationCollection::make(array_filter($values));
+    }
 
+    /**
+     * @return MemberCollection|Member[]
+     * @throws \Exception
+     */
+    public function getIrmaMembers() : MemberCollection
+    {
+        $this->verifyLoggedIn();
+
+        $url = $this->baseUri . '/' . $this->reportUrl;
+        $carbon = Carbon::createFromDate(1970, 01, 01, $this->irmaTimezone);
+        $query = [
+            'astartDate' => $carbon->format('d.m.Y'),
+            'astopDate' => Carbon::now($this->irmaTimezone)->addYear()->format('d.m.Y'),
+            'member' => 'Anzeigen',
+        ];
+
+        $res = $this->client->request('GET', $url, [
+            'query' => $query,
+        ]);
+
+        if ($res->getStatusCode() <> 200) {
+            throw new \Exception($res->getReasonPhrase());
+        }
+
+        $crawler = new Crawler(utf8_encode((string) $res->getBody()));
+
+        $trimChars = chr(0xC2).chr(0xA0);
+        $values = $crawler
+            ->filter('body > table > tr')
+            ->each(function (Crawler $node) use ($trimChars) {
+                $cols = $node->filter('td');
+
+                if ($cols->count() !== 3) {
+                    return false;
+                }
+
+                $memberId = (int) trim((string) $cols->eq(2)->text(), $trimChars);
+
+                if (empty($memberId) || $memberId <= 0) {
+                    return false;
+                }
+
+                return new Member(
+                    trim((string) $cols->eq(0)->text(), $trimChars),
+                    trim((string) $cols->eq(1)->text(), $trimChars),
+                    $memberId
+                );
+            });
+
+        return MemberCollection::make(array_filter($values));
     }
 
     /**
