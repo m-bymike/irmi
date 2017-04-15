@@ -177,6 +177,8 @@ return [
         Irma\Providers\EventServiceProvider::class,
         Irma\Providers\RouteServiceProvider::class,
 
+        // Json Api
+        CloudCreativity\LaravelJsonApi\ServiceProvider::class,
     ],
 
     /*
@@ -225,6 +227,7 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+        'JsonApi' => CloudCreativity\LaravelJsonApi\Facade::class,
 
     ],
 

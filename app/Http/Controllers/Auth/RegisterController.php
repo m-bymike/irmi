@@ -51,6 +51,8 @@ class RegisterController extends Controller
             'name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|min:6|confirmed',
+            'irma_user' => 'required|min:3',
+            'irma_pw' => 'required|confirmed',
         ]);
     }
 
@@ -66,6 +68,8 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
+            'irma_user' => $data['irma_user'],
+            'irma_pw' => $data['irma_pw'],
         ]);
     }
 }

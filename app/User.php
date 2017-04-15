@@ -5,6 +5,31 @@ namespace Irma;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+/**
+ * Irma\User
+ *
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @mixin \Eloquent
+ * @property int $id
+ * @property string $name
+ * @property string $email
+ * @property string $password
+ * @property string $remember_token
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property string $irma_user
+ * @property string $irma_pw
+ * @method static \Illuminate\Database\Query\Builder|\Irma\User whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Irma\User whereEmail($value)
+ * @method static \Illuminate\Database\Query\Builder|\Irma\User whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Irma\User whereIrmaPw($value)
+ * @method static \Illuminate\Database\Query\Builder|\Irma\User whereIrmaUser($value)
+ * @method static \Illuminate\Database\Query\Builder|\Irma\User whereName($value)
+ * @method static \Illuminate\Database\Query\Builder|\Irma\User wherePassword($value)
+ * @method static \Illuminate\Database\Query\Builder|\Irma\User whereRememberToken($value)
+ * @method static \Illuminate\Database\Query\Builder|\Irma\User whereUpdatedAt($value)
+ * @method static \Irma\User create(array $values)
+ */
 class User extends Authenticatable
 {
     use Notifiable;
@@ -15,7 +40,11 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name',
+        'email',
+        'password',
+        'irma_user',
+        'irma_pw',
     ];
 
     /**
@@ -24,6 +53,32 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
+        'remember_token',
+        'irma_pw',
     ];
+
+    /**
+     * Pw Mutator
+     *
+     * @param string $string
+     *
+     * @return string
+     */
+    public function getIrmaPwAttribute(string $string): string
+    {
+        return \Crypt::decryptString($string);
+    }
+
+    /**
+     * Pw Mutator
+     *
+     * @param string $string
+     *
+     * @return string
+     */
+    public function setIrmaPwAttribute(string $string)
+    {
+        $this->attributes['irma_pw'] = \Crypt::encryptString($string);
+    }
 }

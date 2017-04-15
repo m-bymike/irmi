@@ -2,8 +2,9 @@
 
 namespace Irma\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use Irma\Services\IrmaClient;
+use Illuminate\Support\ServiceProvider;
+use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,5 +28,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(IrmaClient::class, function () {
             return IrmaClient::create();
         });
+
+        if ($this->app->environment() === 'local') {
+            $this->app->register(IdeHelperServiceProvider::class);
+        }
     }
 }

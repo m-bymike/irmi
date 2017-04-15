@@ -131,6 +131,50 @@ class IrmaClient
         return ReservationCollection::make(array_filter($values));
     }
 
+    public function getUserReservations($userId)
+    {
+        $this->verifyLoggedIn();
+
+        $url = $this->baseUri . '/' . $this->reportUrl;
+        $carbon = Carbon::now($this->irmaTimezone);
+        $query = [
+            'astartDate' => $carbon->format('d.m.Y'),
+            'astopDate' => $carbon->addYear()->format('d.m.Y'),
+            'yres' => 'Anzeigen',
+        ];
+
+        $res = $this->client->request('GET', $url, [
+            'query' => $query,
+        ]);
+
+        if ($res->getStatusCode() <> 200) {
+            throw new \Exception($res->getReasonPhrase());
+        }
+
+        $crawler = new Crawler((string) $res->getBody());
+
+        $values = $crawler
+            ->filter('body > table > tr')
+            ->each(function (Crawler $node) use ($userId) {
+                $cols = $node->filter('td');
+
+                if ($cols->count() !== 9) {
+                    return false;
+                }
+
+                return new Reservation(
+                    Callsign::createFromString($cols->eq(0)->text()),
+                    Carbon::createFromFormat('d.m.y H:i', $cols->eq(1)->text(), 'Europe/Vienna'),
+                    Carbon::createFromFormat('d.m.y H:i', $cols->eq(2)->text(), 'Europe/Vienna'),
+                    $userId,
+                    Reservation::TYPE_RESERVATION
+                );
+            });
+
+        return ReservationCollection::make(array_filter($values));
+
+    }
+
     /**
      * @return void
      */
