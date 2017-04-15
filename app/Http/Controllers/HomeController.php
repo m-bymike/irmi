@@ -30,4 +30,9 @@ class HomeController extends Controller
             'reservations' => $client->getUserReservations($user->irma_user),
         ]);
     }
+
+    public function profile()
+    {
+        return view('auth.profile');
+    }
 }

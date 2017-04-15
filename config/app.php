@@ -179,6 +179,7 @@ return [
 
         // Json Api
         CloudCreativity\LaravelJsonApi\ServiceProvider::class,
+        Laravel\Passport\PassportServiceProvider::class,
     ],
 
     /*

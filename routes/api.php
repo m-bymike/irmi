@@ -13,6 +13,17 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+//Route::middleware('auth:api')->get('/user', function (Request $request) {
+//    return $request->user();
+//});
+
+Route::group(
+    [
+        'middleware' => ['json-api:v1', 'auth:api'],
+        'namespace' => '\\Api',
+        'prefix' => '/v1',
+    ],
+    function () {
+        \JsonApi::resource(Irma\JsonApi\Members\Schema::RESOURCE_TYPE, 'MembersController');
+    }
+);

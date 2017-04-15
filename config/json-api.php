@@ -46,7 +46,7 @@ return [
             'supported-ext' => null,
             'paging' => [
                 'page' => null,
-                'per-page' => null,
+                'per-page' => 20,
             ],
             'paging-meta' => [
                 'current-page' => null,
@@ -99,7 +99,8 @@ return [
     */
     'schemas' => [
         'defaults' => [
-            'App\Person' => 'App\JsonApi\Schemas\PeopleSchema',
+//            'App\Person' => 'App\JsonApi\Schemas\PeopleSchema',
+            Irma\Member::class => Irma\JsonApi\Members\Schema::class,
         ],
         'v1' => [],
     ],
@@ -122,7 +123,7 @@ return [
     */
     'eloquent-adapter' => [
         'map' => [
-            'people' => 'App\Person',
+            'members' => Irma\Member::class,
         ],
         'columns' => [],
     ],
@@ -141,7 +142,9 @@ return [
     | your custom adapters here. These will be created via the service
     | container, so you can type-hint dependencies in an adapter's constructor.
     */
-    'adapters' => [],
+    'adapters' => [
+        CloudCreativity\LaravelJsonApi\Adapters\EloquentAdapter::class,
+    ],
 
     /*
     |--------------------------------------------------------------------------
