@@ -29,6 +29,8 @@ class IrmaClient
 
     private $loggedIn = false;
 
+    private $irmaTimezone = 'Europe/Vienna';
+
     /**
      * @var ClientInterface
      */
@@ -50,12 +52,12 @@ class IrmaClient
     }
 
     /**
-     * @param int    $userId
+     * @param string $userId
      * @param string $pw
      *
      * @return bool
      */
-    public function login(int $userId, string $pw) : bool
+    public function login(string $userId, string $pw) : bool
     {
         $url = $this->baseUri . '/' . $this->loginUrl;
         $res = $this->client->request('POST', $url, [
@@ -82,8 +84,8 @@ class IrmaClient
 
         $url = $this->baseUri . '/' . $this->reportUrl;
         $query = [
-            'astartDate' => $from->format('d.m.Y'),
-            'astopDate' => $to->format('d.m.Y'),
+            'astartDate' => $from->setTimezone($this->irmaTimezone)->format('d.m.Y'),
+            'astopDate' => $to->setTimezone($this->irmaTimezone)->format('d.m.Y'),
             'resall' => 'Anzeigen',
         ];
 
@@ -100,25 +102,30 @@ class IrmaClient
         $values = $crawler
             ->filter('body > table > tr')
             ->each(function (Crawler $node) {
-            $cols = $node->filter('td');
+                $cols = $node->filter('td');
 
-            if ($cols->count() !== 10) {
-                return false;
-            }
+                if ($cols->count() !== 10) {
+                    return false;
+                }
 
-            $jsString = (string) $cols->eq(5)->filter('a')->attr('href');
-            if (preg_match('/user_info.php\?user=(\d+)\'/', $jsString, $matches) === 1) {
-                $userId = (int) $matches[1];
-            } else {
-                $userId = 0;
-            }
+                $userId = -1;
+                $type = Reservation::TYPE_BLOCKED;
+                $userLink = $cols->eq(5)->filter('a');
+                if ($userLink->count() > 0) {
+                    $type = Reservation::TYPE_RESERVATION;
+                    $jsString = (string) $userLink->attr('href');
+                    if (preg_match('/user_info.php\?user=(\d+)\'/', $jsString, $matches) === 1) {
+                        $userId = (int) $matches[1];
+                    }
+                }
 
-            return new Reservation(
-                Callsign::createFromString($cols->eq(0)->text()),
-                Carbon::createFromFormat('d.m.y H:i', $cols->eq(1)->text(), 'Europe/Vienna'),
-                Carbon::createFromFormat('d.m.y H:i', $cols->eq(2)->text(), 'Europe/Vienna'),
-                $userId
-            );
+                return new Reservation(
+                    Callsign::createFromString($cols->eq(0)->text()),
+                    Carbon::createFromFormat('d.m.y H:i', $cols->eq(1)->text(), 'Europe/Vienna'),
+                    Carbon::createFromFormat('d.m.y H:i', $cols->eq(2)->text(), 'Europe/Vienna'),
+                    $userId,
+                    $type
+                );
         });
 
         return ReservationCollection::make(array_filter($values));

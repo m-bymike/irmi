@@ -3,6 +3,7 @@
 namespace Irma\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Irma\Services\IrmaClient;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +24,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->singleton(IrmaClient::class, function () {
+            return IrmaClient::create();
+        });
     }
 }

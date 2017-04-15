@@ -15,6 +15,9 @@ use Carbon\Carbon;
 
 final class Reservation
 {
+    const TYPE_RESERVATION = 'reservation';
+    const TYPE_BLOCKED = 'blocked';
+
     /**
      * @var Callsign
      */
@@ -36,19 +39,31 @@ final class Reservation
     private $userId;
 
     /**
+     * @var string
+     */
+    private $type;
+
+    /**
      * Reservation constructor.
      *
      * @param Callsign $callsign
      * @param Carbon   $start
      * @param Carbon   $end
      * @param int      $userId
+     * @param string   $type
      */
-    public function __construct(Callsign $callsign, Carbon $start, Carbon $end, int $userId)
+    public function __construct(Callsign $callsign, Carbon $start, Carbon $end, int $userId, string $type)
     {
         $this->callsign = $callsign;
         $this->start = $start;
         $this->end = $end;
         $this->userId = $userId;
+
+        if (!in_array($type, [self::TYPE_BLOCKED, self::TYPE_RESERVATION])) {
+            throw new \InvalidArgumentException();
+        }
+
+        $this->type = $type;
     }
 
     /**
@@ -81,5 +96,13 @@ final class Reservation
     public function getUserId(): int
     {
         return $this->userId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
     }
 }
