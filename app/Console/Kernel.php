@@ -26,8 +26,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        $schedule->command('irma:scrape:members')
+            ->daily();
+
+        $schedule->command('irma:scrape:reservations')
+            ->everyThirtyMinutes();
     }
 
     /**
