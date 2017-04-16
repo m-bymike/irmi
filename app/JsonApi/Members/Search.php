@@ -19,7 +19,13 @@ class Search extends AbstractSearch
      */
     protected function filter(Builder $builder, Collection $filters)
     {
-        //
+        if ($filters->has('irma-id')) {
+            $builder->where('irma_id', $filters->get('irma-id'));
+        }
+
+        if ($filters->has('irma-ids')) {
+            $builder->whereIn('irma_id', explode(',', $filters->get('irma-ids')));
+        }
     }
 
     /**
@@ -28,6 +34,6 @@ class Search extends AbstractSearch
      */
     protected function isSearchOne(Collection $filters)
     {
-        //
+        return $filters->has('irma-id');
     }
 }

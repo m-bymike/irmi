@@ -38,4 +38,9 @@ class Member extends Model
         'first_name',
         'last_name',
     ];
+
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class, 'member_id');
+    }
 }

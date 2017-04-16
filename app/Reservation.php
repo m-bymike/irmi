@@ -68,6 +68,16 @@ class Reservation extends Model
      */
     protected $dates = ['deleted_at'];
 
+    public function aircraft()
+    {
+        return $this->belongsTo(Aircraft::class, 'aircraft_id');
+    }
+
+    public function member()
+    {
+        return $this->belongsTo(Member::class, 'member_id');
+    }
+
     public function getStartAttribute($value)
     {
         return Carbon::parse($value, 'UTC');

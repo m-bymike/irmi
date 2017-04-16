@@ -18,7 +18,7 @@ class Request extends RequestHandler
      * @var array
      */
     protected $hasMany = [
-        //
+        'reservations',
     ];
 
     /**
@@ -26,10 +26,10 @@ class Request extends RequestHandler
      */
     protected $allowedFilteringParameters = [
         'id',
+        'irma-id',
+        'irma-ids',
     ];
 
-    protected $allowedIncludePaths = [
-        'reservations',
-    ];
+    protected $allowedIncludePaths = [];
 }
 

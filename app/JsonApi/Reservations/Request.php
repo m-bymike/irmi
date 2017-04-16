@@ -11,7 +11,8 @@ class Request extends RequestHandler
      * @var array
      */
     protected $hasOne = [
-        //
+        'aircraft',
+        'member',
     ];
 
     /**
@@ -26,6 +27,9 @@ class Request extends RequestHandler
      */
     protected $allowedFilteringParameters = [
         'id',
+        'member.id',
+        'member.irma_id',
+        'aircraft.callsign',
     ];
 
     protected $allowedIncludePaths = [
