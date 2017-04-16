@@ -4,6 +4,7 @@ namespace Irma;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Irma\Reservation
@@ -39,6 +40,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Reservation extends Model
 {
+    use SoftDeletes;
+
+
     const TYPE_RESERVATION = 1;
     const TYPE_WAITLIST = 2;
     const TYPE_BLOCKER = 3;
@@ -56,6 +60,13 @@ class Reservation extends Model
         'member_id',
         'type',
     ];
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['deleted_at'];
 
     public function getStartAttribute($value)
     {

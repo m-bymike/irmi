@@ -16,14 +16,14 @@ class ScrapeReservations extends Command
      *
      * @var string
      */
-    protected $signature = 'irma:scrape:reservations {--u|userId=} {from} {to}';
+    protected $signature = 'irma:scrape:reservations {--u|userId=} {from?} {to?}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Download & update member list';
+    protected $description = 'Download & update reservations list';
 
     /**
      * Execute the console command.
@@ -41,8 +41,15 @@ class ScrapeReservations extends Command
         $this->info(' > login');
         $client->login($user, $pw);
 
-        $from = Carbon::parse($this->argument('from'));
-        $to = Carbon::parse($this->argument('to'));
+        if (empty($this->argument('to'))) {
+            $from = Carbon::now();
+            $to = Carbon::now()->addMonths(12);
+            $processDeletes = true;
+        } else {
+            $from = Carbon::parse($this->argument('from'));
+            $to = Carbon::parse($this->argument('to'));
+            $processDeletes = false;
+        }
 
         $this->info(' > fetch reservations');
         $irmaReservations = $client->getReservations($from, $to);
@@ -73,9 +80,26 @@ class ScrapeReservations extends Command
             $bar->advance();
         });
 
-        // TODO soft delete leftovers
-
         $this->info('');
+
+        if ($processDeletes) {
+            $notDelete = $irmaReservations->map(function (Reservation $irmaReservation) {
+                return $irmaReservation->getIrmaId();
+            });
+
+            $this->info(' > remove deleted reservations');
+            $deletions = 0;
+
+            \Irma\Reservation::where('start', '>=', $from)
+                ->whereNotIn('irma_id', $notDelete)
+                ->get()
+                ->each(function (\Irma\Reservation $reservation) use (&$deletions) {
+                    $reservation->delete();
+                    $deletions++;
+                });
+
+            $this->info(' > deleted: ' . $deletions);
+        }
 
         return 0;
     }
