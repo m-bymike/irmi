@@ -30,6 +30,8 @@ use Laravel\Passport\HasApiTokens;
  * @method static \Illuminate\Database\Query\Builder|\Irma\User whereRememberToken($value)
  * @method static \Illuminate\Database\Query\Builder|\Irma\User whereUpdatedAt($value)
  * @method static \Irma\User create(array $values)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Passport\Client[] $clients
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Passport\Token[] $tokens
  */
 class User extends Authenticatable
 {

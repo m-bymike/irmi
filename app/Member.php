@@ -15,6 +15,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $first_name
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
+ *
+ * @property-read Reservation[] $reservations
+ *
  * @method static \Illuminate\Database\Query\Builder|\Irma\Member whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Irma\Member whereFirstName($value)
  * @method static \Illuminate\Database\Query\Builder|\Irma\Member whereId($value)

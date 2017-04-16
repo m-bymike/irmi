@@ -9,7 +9,7 @@
  * ----------------------------------------------------------------------------
  */
 
-namespace Irma\DataTypes;
+namespace Irma\Services\Irma\DataTypes;
 
 use Illuminate\Support\Collection;
 

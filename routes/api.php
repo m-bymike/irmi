@@ -25,5 +25,7 @@ Route::group(
     ],
     function () {
         \JsonApi::resource(Irma\JsonApi\Members\Schema::RESOURCE_TYPE, 'MembersController');
+        \JsonApi::resource(Irma\JsonApi\Aircraft\Schema::RESOURCE_TYPE, 'AircraftController');
+        \JsonApi::resource(Irma\JsonApi\Reservations\Schema::RESOURCE_TYPE, 'ReservationsController');
     }
 );

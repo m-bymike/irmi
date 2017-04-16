@@ -9,7 +9,7 @@
  * ----------------------------------------------------------------------------
  */
 
-namespace Irma\DataTypes;
+namespace Irma\Services\Irma\DataTypes;
 
 final class Callsign
 {
@@ -42,8 +42,19 @@ final class Callsign
         $this->registration = $registration;
     }
 
-    public function __toString() : string
+    /**
+     * @return string
+     */
+    public function toString() : string
     {
         return $this->country . '-' . $this->registration;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString() : string
+    {
+        return $this->toString();
     }
 }

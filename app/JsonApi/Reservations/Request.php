@@ -1,6 +1,6 @@
 <?php
 
-namespace Irma\JsonApi\Members;
+namespace Irma\JsonApi\Reservations;
 
 use CloudCreativity\JsonApi\Http\Requests\RequestHandler;
 
@@ -29,7 +29,7 @@ class Request extends RequestHandler
     ];
 
     protected $allowedIncludePaths = [
-        'reservations',
+        'aircraft',
+        'member',
     ];
 }
-

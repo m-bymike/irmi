@@ -9,7 +9,7 @@
  * ----------------------------------------------------------------------------
  */
 
-namespace Irma\DataTypes;
+namespace Irma\Services\Irma\DataTypes;
 
 use Carbon\Carbon;
 
@@ -44,6 +44,11 @@ final class Reservation
     private $type;
 
     /**
+     * @var int
+     */
+    private $irmaId;
+
+    /**
      * Reservation constructor.
      *
      * @param Callsign $callsign
@@ -51,13 +56,15 @@ final class Reservation
      * @param Carbon   $end
      * @param int      $userId
      * @param string   $type
+     * @param int      $irmaId
      */
-    public function __construct(Callsign $callsign, Carbon $start, Carbon $end, int $userId, string $type)
+    public function __construct(Callsign $callsign, Carbon $start, Carbon $end, int $userId, string $type, int $irmaId)
     {
         $this->callsign = $callsign;
         $this->start = $start;
         $this->end = $end;
         $this->userId = $userId;
+        $this->irmaId = $irmaId;
 
         if (!in_array($type, [self::TYPE_BLOCKED, self::TYPE_RESERVATION])) {
             throw new \InvalidArgumentException();
@@ -104,5 +111,13 @@ final class Reservation
     public function getType(): string
     {
         return $this->type;
+    }
+
+    /**
+     * @return int
+     */
+    public function getIrmaId(): int
+    {
+        return $this->irmaId;
     }
 }

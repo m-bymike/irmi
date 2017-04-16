@@ -3,9 +3,9 @@
 namespace Irma\Console\Commands;
 
 use Carbon\Carbon;
+use Irma\Services\Irma\DataTypes\Reservation;
 use Irma\Services\IrmaClient;
 use Illuminate\Console\Command;
-use Irma\DataTypes\Reservation;
 
 class Scrape extends Command
 {

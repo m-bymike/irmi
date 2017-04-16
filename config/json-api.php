@@ -101,6 +101,8 @@ return [
         'defaults' => [
 //            'App\Person' => 'App\JsonApi\Schemas\PeopleSchema',
             Irma\Member::class => Irma\JsonApi\Members\Schema::class,
+            Irma\Aircraft::class => Irma\JsonApi\Aircraft\Schema::class,
+            Irma\Reservation::class => Irma\JsonApi\Reservations\Schema::class,
         ],
         'v1' => [],
     ],
@@ -124,6 +126,8 @@ return [
     'eloquent-adapter' => [
         'map' => [
             'members' => Irma\Member::class,
+            'aircraft' => Irma\Aircraft::class,
+            'reservations' => Irma\Reservation::class,
         ],
         'columns' => [],
     ],

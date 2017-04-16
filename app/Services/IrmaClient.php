@@ -14,12 +14,12 @@ namespace Irma\Services;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
-use Irma\DataTypes\Callsign;
-use Irma\DataTypes\Reservation;
-use Irma\DataTypes\ReservationCollection;
 use Irma\Services\Irma\DataTypes\Member;
-use Irma\Services\Irma\DataTypes\MemberCollection;
 use Symfony\Component\DomCrawler\Crawler;
+use Irma\Services\Irma\DataTypes\Callsign;
+use Irma\Services\Irma\DataTypes\Reservation;
+use Irma\Services\Irma\DataTypes\MemberCollection;
+use Irma\Services\Irma\DataTypes\ReservationCollection;
 
 class IrmaClient
 {
@@ -126,7 +126,8 @@ class IrmaClient
                     Carbon::createFromFormat('d.m.y H:i', $cols->eq(1)->text(), 'Europe/Vienna'),
                     Carbon::createFromFormat('d.m.y H:i', $cols->eq(2)->text(), 'Europe/Vienna'),
                     $userId,
-                    $type
+                    $type,
+                    intval($cols->eq(9)->text())
                 );
         });
 
@@ -169,7 +170,8 @@ class IrmaClient
                     Carbon::createFromFormat('d.m.y H:i', $cols->eq(1)->text(), 'Europe/Vienna'),
                     Carbon::createFromFormat('d.m.y H:i', $cols->eq(2)->text(), 'Europe/Vienna'),
                     $userId,
-                    Reservation::TYPE_RESERVATION
+                    Reservation::TYPE_RESERVATION,
+                    0 // TODO
                 );
             });
 
