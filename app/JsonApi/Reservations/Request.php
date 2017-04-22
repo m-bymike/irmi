@@ -30,6 +30,20 @@ class Request extends RequestHandler
         'member.id',
         'member.irma_id',
         'aircraft.callsign',
+
+        // start datetime
+        'start',
+        'start|lt',
+        'start|le',
+        'start|gt',
+        'start|ge',
+
+        // end datetime
+        'end',
+        'end|lt',
+        'end|le',
+        'end|gt',
+        'end|ge',
     ];
 
     protected $allowedIncludePaths = [

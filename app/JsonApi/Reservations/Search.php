@@ -2,13 +2,21 @@
 
 namespace Irma\JsonApi\Reservations;
 
-use CloudCreativity\LaravelJsonApi\Search\AbstractSearch;
-use Illuminate\Database\Eloquent\Builder;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
-use Irma\Aircraft;
+use Illuminate\Database\Eloquent\Builder;
+use CloudCreativity\LaravelJsonApi\Search\AbstractSearch;
+use Irma\JsonApi\Contracts\ModifiableAttributeCollection;
+use Irma\JsonApi\ModifiableCarbonAttribute;
+use Irma\JsonApi\ModifiableFilters;
 
 class Search extends AbstractSearch
 {
+    use ModifiableFilters;
+
+    /**
+     * @var int
+     */
     protected $maxPerPage = 100;
 
     /**
@@ -19,24 +27,37 @@ class Search extends AbstractSearch
     {
         if ($filters->has('aircraft.callsign')) {
             $callsign = $filters->get('aircraft.callsign');
-            $builder->whereHas('aircraft', function ($query) use ($callsign) {
+            $builder->whereHas('aircraft', function (Builder $query) use ($callsign) {
                 $query->where('callsign', $callsign);
             });
         }
 
         if ($filters->has('member.irma_id')) {
             $callsign = $filters->get('member.irma_id');
-            $builder->whereHas('member', function ($query) use ($callsign) {
+            $builder->whereHas('member', function (Builder $query) use ($callsign) {
                 $query->where('irma_id', $callsign);
             });
         }
 
         if ($filters->has('member.id')) {
             $memberId = $filters->get('member.id');
-            $builder->whereHas('member', function ($query) use ($memberId) {
+            $builder->whereHas('member', function (Builder $query) use ($memberId) {
                 $query->where('id', $memberId);
             });
         }
+
+        $this->filterWithModifiers($builder, $filters);
+    }
+
+    /**
+     * @return ModifiableAttributeCollection
+     */
+    protected function getModifiableAttributes() : ModifiableAttributeCollection
+    {
+        return \Irma\JsonApi\ModifiableAttributeCollection::create([
+            ModifiableCarbonAttribute::create('start'),
+            ModifiableCarbonAttribute::create('end'),
+        ]);
     }
 
     /**
