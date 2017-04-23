@@ -14,6 +14,7 @@
 Auth::routes();
 
 Route::get('/home', 'HomeController@index');
+Route::get('/', 'HomeController@index');
 Route::get('/profile', 'HomeController@profile');
 
 // TODO no web middleware
