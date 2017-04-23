@@ -32,7 +32,7 @@ class ScrapeMembers extends Command
      */
     public function handle(IrmaClient $client)
     {
-        $user = $this->option('userId');
+        $user = env('IRMA_USER') ?: $this->option('userId');
         $pw = env('IRMA_PASSWORD');
         $pw = $pw ? $pw : $this->secret('password');
 
