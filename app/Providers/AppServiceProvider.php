@@ -34,6 +34,9 @@ class AppServiceProvider extends ServiceProvider
 
         if ($this->app->environment() === 'local') {
             $this->app->register(IdeHelperServiceProvider::class);
+        } else {
+            // force HTTPS for every environment, except local
+            $this->app['request']->server->set('HTTPS', true);
         }
 
         $this->app->bind(CalendarFactoryInterface::class, function () {
