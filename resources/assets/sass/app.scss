@@ -7,3 +7,21 @@
 
 // Bootstrap
 @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+
+// main front
+.main-front {
+    background: url("../images/cessna.jpg");
+    background-position: center 50px;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    .jumbotron {
+        background: none;
+        & > .container {
+            color: $gray-darker;
+            background: transparentize($gray-lighter, 0.25);
+        }
+
+    }
+
+}
