@@ -59,7 +59,43 @@ class User extends Authenticatable
         'password',
         'remember_token',
         'irma_pw',
+        'calendar_token',
     ];
+
+    /**
+     * Describe relation to member.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function member()
+    {
+        return $this->belongsTo(Member::class, 'irma_user', 'irma_id');
+    }
+
+    /**
+     * Register a callback for default values.
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function (User $model) {
+            $model->generateCalendarToken();
+        });
+    }
+
+    /**
+     * Generates a random token for the calendar.
+     *
+     * @return void
+     */
+    protected function generateCalendarToken()
+    {
+        $this->attributes['calendar_token'] = str_random(64);
+    }
+
 
     /**
      * Pw Mutator
@@ -78,7 +114,7 @@ class User extends Authenticatable
      *
      * @param string $string
      *
-     * @return string
+     * @return void
      */
     public function setIrmaPwAttribute(string $string)
     {

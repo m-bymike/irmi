@@ -15,3 +15,6 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index');
 Route::get('/profile', 'HomeController@profile');
+
+// TODO no web middleware
+Route::get('/feeds/{calendarToken}/irma.ics', 'ICalController@download');
