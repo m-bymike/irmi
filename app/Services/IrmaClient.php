@@ -121,13 +121,27 @@ class IrmaClient
                     }
                 }
 
+                // load reservation id
+                $reservationLink = $cols->eq(0)->filter('a');
+                $irmaId = -1;
+                if ($reservationLink->count() > 0) {
+                    $jsString = (string) $reservationLink->attr('href');
+                    if (preg_match('/ri.php\?id=(\d+)\'/', $jsString, $matches) === 1) {
+                        $irmaId = (int) $matches[1];
+                    }
+                }
+
+                if ($irmaId < 0) {
+                    return false;
+                }
+
                 return new Reservation(
                     Callsign::createFromString($cols->eq(0)->text()),
                     Carbon::createFromFormat('d.m.y H:i', $cols->eq(1)->text(), 'Europe/Vienna'),
                     Carbon::createFromFormat('d.m.y H:i', $cols->eq(2)->text(), 'Europe/Vienna'),
                     $userId,
                     $type,
-                    intval($cols->eq(9)->text())
+                    $irmaId
                 );
         });
 
