@@ -19,5 +19,5 @@
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
     # Enable CORS
-    Header set Access-Control-Allow-Origin "*"
+    Header set Access-Control-Allow-Origin "localhost"
 </IfModule>
