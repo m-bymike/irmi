@@ -23,7 +23,7 @@ use Irma\Services\Irma\DataTypes\ReservationCollection;
 
 class IrmaClient
 {
-    private $baseUri = 'http://213.143.105.34/irma';
+    private $baseUri = 'http://213.143.118.82/irma/';
 
     private $loginUrl = 'login.php';
 
