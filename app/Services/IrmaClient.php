@@ -135,8 +135,17 @@ class IrmaClient
                     return false;
                 }
 
+                // create callsign
+                $callsign = $cols->eq(0)->text();
+
+                try {
+                    $callsign = Callsign::createFromString($callsign);
+                } catch (\InvalidArgumentException $exception) {
+                    return false;
+                }
+
                 return new Reservation(
-                    Callsign::createFromString($cols->eq(0)->text()),
+                    $callsign,
                     Carbon::createFromFormat('d.m.y H:i', $cols->eq(1)->text(), 'Europe/Vienna'),
                     Carbon::createFromFormat('d.m.y H:i', $cols->eq(2)->text(), 'Europe/Vienna'),
                     $userId,
